@@ -20,6 +20,7 @@
   "dependencies": {
     "bunyan": "^1.8.1",
     "express": "^4.17.1",
+    "mongodb": "^3.6.2",
     "swagger-express-mw": "^0.7.0"
   },
   "devDependencies": {
@@ -32,6 +33,5 @@
     "supertest": "^3.0.0",
     "swagger": "^0.7.5"
   },
-
   "homepage": "https://github.com/jrault42/klaxoon-bookmarks#readme"
 }

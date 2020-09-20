@@ -23,7 +23,7 @@ swagger:
 
     _swagger_cors:
       name: swagger_cors
-      origin: *
+      origin: ['']
       methods: "GET, PUT, POST, DELETE"
       preflightContinue: false
       credentials: true

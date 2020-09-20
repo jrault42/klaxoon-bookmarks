@@ -16,10 +16,10 @@ const config = {
   },
 
   // MongoDB configuration
-  mongodb: (process.env.MONGODB || 'mongodb://localhost'),
+  mongodb: 'mongodb://bookmarks',
   port: 8080,
   test: {
-    mongo: process.env.MONGODBTEST,
+    mongo: 'mongodb://bookmarks-tests',
     loglevel: 'error'
   }
 };
