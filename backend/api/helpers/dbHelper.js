@@ -25,8 +25,8 @@ module.exports = {
    * @param callback
    * @returns {*|{document}|Promise}
    */
-  insertInDB (coll, documents, options, callback) {
-    return db.collection(coll).insert(documents, options, callback);
+  insertInDB (coll, documents, options) {
+    return db.collection(coll).insert(documents, options);
   },
 
   /**

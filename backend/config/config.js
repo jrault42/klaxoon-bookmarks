@@ -16,12 +16,7 @@ const config = {
   },
 
   // MongoDB configuration
-  mongodb: 'mongodb://bookmarks',
-  port: 8080,
-  test: {
-    mongo: 'mongodb://bookmarks-tests',
-    loglevel: 'error'
-  }
+  mongodb: 'mongodb://localhost'
 };
 
 module.exports = config;

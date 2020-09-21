@@ -1,11 +1,7 @@
-
-
 openapi: "3.0.0"
 
 info:
-
   version: 1.0.0
-
   title: klaxoon-bookmarks
 
 paths:
@@ -126,68 +122,3 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-
-components:
-  schemas:
-
-    VideoBookmark:
-      type: object
-      properties:
-        url:
-          type: string
-        title:
-          type: string
-        author:
-          type: string
-        createDate:
-          type: string
-        width:
-          type: string
-        height:
-          type: string
-        duration:
-          type: integer
-
-    PhotoBookmark:
-      type: object
-      properties:
-        url:
-          type: string
-        title:
-          type: string
-        author:
-          type: string
-        createDate:
-          type: string
-        width:
-          type: string
-        height:
-          type: string
-
-    Bookmark:
-        type: object
-        required:
-          - url
-          - title
-
-        oneOf:
-          - $ref: '#/components/schemas/PhotoBookmark'
-          - $ref: '#/components/schemas/VideoBookmark'
-
-    Bookmarks:
-
-      type: array
-      items:
-        $ref: "#/components/schemas/Bookmark"
-
-    Error:
-      required:
-        - code
-        - message
-
-      properties:
-        code:
-          type: integer
-          format: int32
-        message:
-          type: string

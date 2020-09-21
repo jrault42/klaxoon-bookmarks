@@ -1,0 +1,205 @@
+swagger: "2.0"
+info:
+  version: 1.0.0
+  title: klaxoon-bookmarks
+  description: A REST API to manage bookmarks
+
+consumes:
+- application/json
+produces:
+- application/json
+
+definitions:
+  VideoBookmark:
+    type: object
+    properties:
+      url:
+        type: string
+          required: true  
+      title:
+        type: string
+          required: true  
+      author:
+        type: string
+      createDate:
+        type: string
+      width:
+        type: string
+      height:
+        type: string
+      duration:
+        type: integer
+
+    PhotoBookmark:
+      type: object
+      properties:
+        url:
+          required: true
+          type: string
+        title:
+          required: true
+          type: string
+        author:
+          type: string
+        createDate:
+          type: string
+        width:
+          type: string
+        height:
+          type: string
+
+    Bookmark:
+      type: object
+      oneOf:
+        - $ref: '#/components/schemas/PhotoBookmark'
+        - $ref: '#/components/schemas/VideoBookmark'
+
+    Bookmarks:
+      type: array
+      items:
+        $ref: "#/components/schemas/Bookmark"
+
+    Error:
+      properties:
+        code:
+          type: integer
+          required: true
+          format: int32
+        message:
+          required: true
+          type: string
+
+paths:
+  /modes:
+    x-swagger-router-controller: controller
+    get:
+      description: get phone-modes
+      operationId: getPhoneModes
+      responses:
+        default:
+          description: Returns the phone-modes
+          schema:
+            $ref: "#/definitions/phoneMode"
+
+  /modes/which:
+    x-swagger-router-controller: controller
+    parameters:
+    - name: time
+      in: query
+      description: current time (format "hh:mm")
+      type: string
+
+    get:
+      description: get current phone-mode
+      operationId: getCurrentPhoneMode
+      responses:
+        default:
+          description: Returns the current phone-mode
+          schema:
+            $ref: "#/definitions/phoneMode"
+
+  /modes/rejectCalls:
+    x-swagger-router-controller: controller
+    parameters:
+    - name: time
+      in: query
+      description: current time (format "hh:mm")
+      type: string
+
+    get:
+      description: returns if phone should reject calls
+      operationId: getIfRejectCalls
+      responses:
+        default:
+          description: returns if phone should reject calls
+          schema:
+            type: boolean
+
+  /periods/{id}:
+    x-swagger-router-controller: controller
+
+    parameters:
+    - name: id
+      in: path
+      description: id of the period
+      required: true
+      type: string
+
+    get:
+      description: get given period
+      operationId: getPeriod
+      responses:
+        default:
+          description: Returns the given period
+          schema:
+            $ref: "#/definitions/period"
+
+    put:
+      description: updates given period
+      operationId: updatePeriod
+      parameters:
+      - name: body
+        in: body
+        schema:
+          $ref: "#/definitions/period"
+      responses:
+        default:
+          description: Returns the updated period
+          schema:
+            $ref: "#/definitions/period"
+
+    delete:
+      description: deletes given period
+      operationId: deletePeriod
+      responses:
+        default:
+          description: Returns ok
+          schema:
+            type: string
+
+  /periods:
+    x-swagger-router-controller: controller
+
+    get:
+      description: Get all periods
+      operationId: getAllPeriods
+      responses:
+        default:
+          description: Returns the periods
+          schema:
+            $ref: "#/definitions/period"
+
+    post:
+      description: creates given period
+      operationId: createPeriod
+      parameters:
+      - name: body
+        in: body
+        schema:
+          $ref: "#/definitions/period"
+
+      responses:
+        default:
+          description: Returns created period
+          schema:
+            $ref: "#/definitions/period"
+
+  /lifepage:
+    x-swagger-router-controller: controller
+    get:
+      operationId: lifepage
+      responses:
+        default:
+          description: Returns project name, version and status (OK or KO)
+          schema:
+            $ref: "#/definitions/lifepage"
+
+  /:
+    x-swagger-router-controller: controller
+    get:
+      operationId: home
+      responses:
+        default:
+          description: Returns hello
+          schema:
+            type: string
