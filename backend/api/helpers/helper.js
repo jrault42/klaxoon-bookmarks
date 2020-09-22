@@ -8,12 +8,12 @@ const log = bunyan.createLogger({name: 'klaxoon-bookmarks controller'});
 const dbHelper = require('../helpers/dbHelper');
 
 module.exports = {
-  getBookmarks () {
+  async getBookmarks () {
 	log.debug('getBookmarks');
 	return dbHelper.findInDB('bookmarks', {}).toArray();
   },
 
-  getBookmark (id) {
+  async getBookmark (id) {
 	log.debug('getBookmark');
 	return;
   }
