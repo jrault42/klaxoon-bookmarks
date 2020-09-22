@@ -17,8 +17,8 @@ const Database = {
   */
   connect (url) {
     return mongo.MongoClient.connect(url)
-      .then(db => {
-        this.db = db;
+      .then(client => {
+        this.db = client.db();
       })
       .catch(err => {
         log.info('An error occured while connecting to mongo:', err);

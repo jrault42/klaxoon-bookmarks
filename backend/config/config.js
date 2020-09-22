@@ -3,6 +3,7 @@
 
 const config = {
   domain: process.env.DOMAIN || 'http://localhost',
+  port: '8080',
 
   express: {
     headers: {
@@ -16,7 +17,7 @@ const config = {
   },
 
   // MongoDB configuration
-  mongodb: 'mongodb://localhost'
+  mongodb: 'mongodb://localhost:27017/bookmarks'
 };
 
 module.exports = config;

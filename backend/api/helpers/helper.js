@@ -9,10 +9,12 @@ const dbHelper = require('../helpers/dbHelper');
 
 module.exports = {
   getBookmarks () {
-    return await dbHelper.findInDB('bookmarks', {})
-  }
+	log.debug('getBookmarks');
+	return dbHelper.findInDB('bookmarks', {}).toArray();
+  },
 
   getBookmark (id) {
-  	return 
+	log.debug('getBookmark');
+	return;
   }
 };
