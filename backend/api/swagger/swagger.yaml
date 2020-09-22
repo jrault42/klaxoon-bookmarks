@@ -1,124 +1,145 @@
-openapi: "3.0.0"
-
+swagger: "2.0"
 info:
   version: 1.0.0
   title: klaxoon-bookmarks
+  description: A REST API to manage bookmarks
+
+consumes:
+- application/json
+produces:
+- application/json
+
+definitions:
+  Bookmark:
+    type: object
+
+    required:
+      - url
+      - title
+      - author
+      - createDate
+    properties:
+      url:
+        type: string
+      title:
+        type: string
+      author:
+        type: string
+      createDate:
+        type: string
+      width:
+        type: string
+      height:
+        type: string
+      duration:
+        type: integer
+
+  Bookmarks:
+    type: array
+    items:
+      $ref: "#/definitions/Bookmark"
+
+  Error:
+    required:
+      - code
+      - message
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
 
 paths:
-
   /bookmarks:
     x-swagger-router-controller: controller
     get:
-      summary: get all bookmarks
+      description: get all bookmarks
       operationId: getBookmarks
-      parameters:
-        - name: limit
-          in: query
-          description: How many items to return at one time (max 100)
-          required: false
-          schema:
-            type: integer
-            format: int32
       responses:
         200:
           description: An array of bookmarks
-          headers:
-            x-next:
-              description: A link to the next page of responses
-              schema:
-                type: string
-          content:
-            application/json:    
-              schema:
-                $ref: "#/components/schemas/Bookmarks"
-
+          schema:
+            $ref: "#/definitions/Bookmarks"
         default:
           description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
+          schema:
+            $ref: "#/definitions/Error"
 
     post:
-      summary: Create a pet
+      description: Create a bookmark
       operationId: createBookmark
-
       responses:
         201:
           description: Null response
         default:
           description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
+          schema:
+            $ref: "#/definitions/Error"
 
   /bookmarks/{id}:
     x-swagger-router-controller: controller
     get:
-      summary: get given bookmark
+      description: get given bookmark
       operationId: getBookmark
       parameters:
         - name: id
           in: path
           required: true
           description: The id of the bookmark
-          schema:
-            type: string
+          type: string
 
       responses:
         200:
           description: Expected response to a valid request
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Bookmark"
-
+          schema:
+            $ref: "#/definitions/Bookmark"
         default:
           description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
+          schema:
+            $ref: "#/definitions/Error"
 
     put:
-        summary: update given bookmark
+        description: update given bookmark
         operationId: updateBookmark
         parameters:
           - name: id
             in: path
             required: true
             description: The id of the bookmark
-            schema:
-              type: string
+            type: string
   
         responses:
           204:
             description: No content response
           default:
             description: unexpected error
-            content:
-              application/json:
-                schema:
-                  $ref: "#/components/schemas/Error"
+            schema:
+              $ref: "#/definitions/Error"
   
     delete:
-      summary: delete given bookmark
+      description: delete given bookmark
       operationId: deleteBookmark
       parameters:
         - name: id
           in: path
           required: true
           description: The id of the bookmark
-          schema:
-            type: string
+          type: string
   
       responses:
         204:
           description: No content response
         default:
           description: unexpected error
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Error"
+          schema:
+            $ref: "#/definitions/Error"
+  /:
+    x-swagger-router-controller: controller
+    get:
+      operationId: home
+      responses:
+        default:
+          description: Returns hello
+          schema:
+            type: string
