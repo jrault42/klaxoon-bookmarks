@@ -4,9 +4,9 @@ function TableItem (props) {
   const bookmark = props.bookmark;
   return (
     <tr>
-      <td>{bookmark.url}</td>
-      <td>{bookmark.title}</td>
-      <td>{bookmark.author}</td>
+      <td>{bookmark.json.url}</td>
+      <td>{bookmark.json.title}</td>
+      <td>{bookmark.json.author_name}</td>
       <td>{bookmark.createDate}</td>
       <td>
         <button className='btn btn-primary m-2'>Modifier</button>

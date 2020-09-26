@@ -50,7 +50,7 @@ const bookmarksController = {
     }
   },
 
-  /**
+    /**
    *
    * @param req
    * @param res
@@ -59,8 +59,8 @@ const bookmarksController = {
   async createBookmark (req, res) {
     log.debug('createBookmark');
     try {
-      const body = req.swagger.params.body.value;
-      await helper.createBookmark(body);
+      const urlToGet = req.swagger.params.body.raw.urlToGet;
+      await helper.createBookmark(urlToGet);
       res.status(201);
       res.end();
     } catch (err) {

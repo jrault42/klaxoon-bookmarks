@@ -1,53 +1,55 @@
 import React from 'react';
 import './App.css';
+import config from './config';
 
 function AddFrom (props) {
-const handleClick = evt => {
-	evt.preventDefault()
-	evt.stopPropagation()
-	const url = document.getElementById('urlinput').value;
-	const encodedUrl = encodeURIComponent(document.getElementById('urlinput').value);
+  const handleClick = evt => {
+    evt.preventDefault();
+    evt.stopPropagation();
+    const url = document.getElementById('urlinput').value;
+    const encodedUrl = encodeURIComponent(document.getElementById('urlinput').value);
 
-	let urlToGet = '';
-	if (url.startsWith('https://www.vimeo.com/')) {
-		urlToGet =`https://vimeo.com/api/oembed.json?url=${encodedUrl}`
-	} else if (url.startsWith('https://www.flickr.com/')) {
-		urlToGet = `https://www.flickr.com/services/oembed/?format=json&url=${encodedUrl}`
-	} else {
-		// todo: display error bad url (only flickr or vimeo)
-		return	
-	}
+    let urlToGet = '';
+    if (url.startsWith('https://www.vimeo.com/')) {
+      urlToGet = `https://vimeo.com/api/oembed.json?url=${encodedUrl}`;
+    } else if (url.startsWith('https://www.flickr.com/')) {
+      urlToGet = `https://www.flickr.com/services/oembed/?format=json&url=${encodedUrl}`;
+    } else {
+      // todo: display error bad url (only flickr or vimeo)
+      return;
+    }
 
-}
-
-const handleRadioClick = evt => {
-	const type = evt.target.id;
-	const urlinput = document.getElementById('urlinput');
-	urlinput.value = type === 'vimeo-btn' ?  "https://www.vimeo.com/" : "http://www.flickr.com/"
-}
-
+    fetch(`${config.backendUrl}/bookmarks`,
+      {
+        method: 'POST',
+		  headers: {
+	 		Accept: 'application/json',
+	  		'Content-Type': 'application/json'
+		  },
+        body: JSON.stringify({ urlToGet })
+      })
+      .then(res => {
+        if (res.status === 201) {
+          props.added()
+        }
+      }).catch(err => console.error(err));
+  };
 
   return (
-    <form className="d-flex justify-content-center flex-column">
-    	<div className="form-group row justify-content-center">
-    	<div className="m-2 row justify-content-center">
-		  <label htmlFor="vimeo-btn" className="m-2">Video (Vimeo)</label> 
-		  <input id="vimeo-btn" name="bookmark-type" onClick={handleRadioClick} type="radio"/>
-	    </div> 
-	    <div className="m-2 row justify-content-center">
-		  <label htmlFor="flickr-btn" className="m-2">Photo (Flickr)</label> 
-		  <input id="flickr-btn" name="bookmark-type" onClick={handleRadioClick} type="radio"/>
-	    </div> </div> 
+    <form className='d-flex justify-content-center flex-column'>
+      <div className='form-group row justify-content-center'>
+        <p className='m-2'>Renseignez l'url d'une photo (flickr.com) ou d'une vidéo (vimeo.com).</p>
+      </div>
 
-
-	    <div className="form-group row justify-content-center">
-		  <label htmlFor="urlinput" className="m-2">URL</label> 
-		  <input id="urlinput" type="text"/>
-	    </div> 
-	    <div className="d-flex form-group justify-content-center">     
-	      <button className="btn btn-success" onClick={handleClick}>Valider</button>
-	    </div> 
+      <div className='form-group row justify-content-center'>
+        <label htmlFor='urlinput' className='m-2'>URL</label>
+        <input id='urlinput' type='text' />
+      </div>
+      <div className='d-flex form-group justify-content-center'>
+        <button className='btn btn-success' onClick={handleClick}>Valider</button>
+      </div>
     </form>
+
   );
 }
 

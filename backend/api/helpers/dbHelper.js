@@ -21,12 +21,12 @@ module.exports = {
   /**
    *
    * @param coll
+   * @param document
    * @param options
-   * @param callback
    * @returns {*|{document}|Promise}
    */
-  insertInDB (coll, documents, options) {
-    return db.collection(coll).insert(documents, options);
+  insertInDB (coll, document, options) {
+    return db.collection(coll).insertOne(document, options);
   },
 
   /**
@@ -57,5 +57,9 @@ module.exports = {
    */
   removeInDB (coll, options) {
     return db.collection(coll).remove(options);
+  },
+
+  ObjectId (id) {
+    return db.ObjectID(id);
   }
 };

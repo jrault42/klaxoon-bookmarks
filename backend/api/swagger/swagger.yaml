@@ -39,6 +39,14 @@ definitions:
     items:
       $ref: "#/definitions/Bookmark"
 
+  urlToGet:
+    type: object
+    required:
+      - urlToGet
+    properties:
+      urlToGet:
+        type: string
+
   Error:
     required:
       - code
@@ -69,6 +77,11 @@ paths:
     post:
       description: Create a bookmark
       operationId: createBookmark
+      parameters:
+      - name: body
+        in: body
+        schema:
+          $ref: "#/definitions/urlToGet"
       responses:
         201:
           description: Null response
