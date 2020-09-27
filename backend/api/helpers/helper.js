@@ -18,7 +18,9 @@ module.exports = {
    */
   async getBookmarks () {
     log.debug('getBookmarks');
-    return dbHelper.findInDB('bookmarks', {}).toArray();
+    const videos = await dbHelper.findInDB('videos', {}).toArray();
+    const photos = await dbHelper.findInDB('photos', {}).toArray();
+    return videos.concat(photos)
   },
 
   /**
@@ -36,16 +38,45 @@ module.exports = {
    * @param url
    * @returns {Promise<void>}
    */
-  async createBookmark (url) {
+  async createBookmark (encodedUrl) {
     log.debug('createBookmark');
 
-    const json = await (await fetch(url)).json();
+    const urlToGet = encodedUrl.includes('vimeo.com')
+      ? `https://vimeo.com/api/oembed.json?url=${encodedUrl}`
+      : `https://www.flickr.com/services/oembed/?format=json&url=${encodedUrl}`;
+
+    const json = await (await fetch(urlToGet)).json();
     if (!json) { throw new Error('Error while getting content with oembed.') }
 
-    await dbHelper.insertInDB('bookmarks', {
-      json,
-      createDate: moment().format('L'),
-      keyWords: []
+    const {type, title, author_name, width, height} = json;
+
+    if (json.type === 'video') {
+      const html = json.html;
+      const slicedHtml = html.slice(html.indexOf('https:'));
+      await dbHelper.insertInDB('videos', {
+        url: slicedHtml.slice(0, slicedHtml.indexOf('\"')),
+        type,
+        title,
+        author: author_name,
+        createDate: moment().format('L'),
+        width,
+        height,
+        duration: json.duration,
+        keyWords: []
     })
+    } else if (json.type === 'photo') {
+      await dbHelper.insertInDB('photos', {
+        url: json.url,
+        type,
+        title,
+        author: author_name,
+        createDate: moment().format('L'),
+        width,
+        height,
+        keyWords: []
+      })
+    } else {
+      log.error('Trying to add unknown type bookmark; doing nothing.');
+    }
   }
 };

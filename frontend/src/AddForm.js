@@ -6,31 +6,26 @@ function AddFrom (props) {
   const handleClick = evt => {
     evt.preventDefault();
     evt.stopPropagation();
-    const url = document.getElementById('urlinput').value;
     const encodedUrl = encodeURIComponent(document.getElementById('urlinput').value);
 
-    let urlToGet = '';
-    if (url.startsWith('https://www.vimeo.com/')) {
-      urlToGet = `https://vimeo.com/api/oembed.json?url=${encodedUrl}`;
-    } else if (url.startsWith('https://www.flickr.com/')) {
-      urlToGet = `https://www.flickr.com/services/oembed/?format=json&url=${encodedUrl}`;
-    } else {
+    if (!encodedUrl.includes('vimeo.com') && !encodedUrl.includes('flickr.com')) {
       // todo: display error bad url (only flickr or vimeo)
       return;
     }
-
     fetch(`${config.backendUrl}/bookmarks`,
       {
         method: 'POST',
-		  headers: {
-	 		Accept: 'application/json',
-	  		'Content-Type': 'application/json'
-		  },
-        body: JSON.stringify({ urlToGet })
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ bookmarkUrl: encodedUrl })
       })
       .then(res => {
         if (res.status === 201) {
-          props.added()
+          props.added();
+        } else {
+          throw new Error('Response status not good! Add failed.');
         }
       }).catch(err => console.error(err));
   };

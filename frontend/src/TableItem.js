@@ -1,16 +1,27 @@
 import React from 'react';
 
 function TableItem (props) {
-  const bookmark = props.bookmark;
+  const {url, title, author, createDate, keyWords} = props.bookmark;
+
+  const handleClickOverview = evt => {
+    evt.preventDefault();
+    evt.stopPropagation();
+    console.log("COUCOU")
+  };
+
   return (
     <tr>
-      <td>{bookmark.json.url}</td>
-      <td>{bookmark.json.title}</td>
-      <td>{bookmark.json.author_name}</td>
-      <td>{bookmark.createDate}</td>
+      <td>{url}</td>
+      <td>{title}</td>
+      <td>{author}</td>
+      <td>{createDate}</td>
       <td>
-        <button className='btn btn-primary m-2'>Modifier</button>
-        <button className='btn btn-danger m-2'>Supprimer</button>
+        <span onClick={handleClickOverview} className="material-icons btn">visibility</span>
+      </td>
+      <td>{keyWords}</td>
+      <td>
+        <span className="material-icons btn">create</span>
+        <span className="material-icons btn">delete</span>
       </td>
     </tr>
   );

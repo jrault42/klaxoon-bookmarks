@@ -59,8 +59,8 @@ const bookmarksController = {
   async createBookmark (req, res) {
     log.debug('createBookmark');
     try {
-      const urlToGet = req.swagger.params.body.raw.urlToGet;
-      await helper.createBookmark(urlToGet);
+      const bookmarkUrl = req.swagger.params.body.raw.bookmarkUrl;
+      await helper.createBookmark(bookmarkUrl);
       res.status(201);
       res.end();
     } catch (err) {

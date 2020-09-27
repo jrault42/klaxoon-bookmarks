@@ -39,12 +39,12 @@ definitions:
     items:
       $ref: "#/definitions/Bookmark"
 
-  urlToGet:
+  bookmarkUrl:
     type: object
     required:
-      - urlToGet
+      - bookmarkUrl
     properties:
-      urlToGet:
+      bookmarkUrl:
         type: string
 
   Error:
@@ -81,7 +81,7 @@ paths:
       - name: body
         in: body
         schema:
-          $ref: "#/definitions/urlToGet"
+          $ref: "#/definitions/bookmarkUrl"
       responses:
         201:
           description: Null response

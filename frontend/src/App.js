@@ -63,11 +63,11 @@ class App extends Component {
         </div>
       );
     } else if (!bookmarks.length) {
-      return <AddForm />;
+      return <AddForm added={this.handleAdded} />;
     } else {
       return (
         <div className='App mt-2'>
-          <button className='btn btn-success m-2' onClick={this.handleAddBtn}>Ajouter</button>
+          <button className='btn btn-success sticky-top m-2' onClick={this.handleAddBtn}>Ajouter</button>
           <Table bookmarks={this.state.bookmarks} />,
         </div>
       );

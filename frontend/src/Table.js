@@ -6,12 +6,14 @@ function Table (props) {
 
   return (
     <table className='table table-hover'>
-      <thead>
+      <thead className='sticky-top'>
         <tr>
           <th>URL</th>
           <th>Titre</th>
           <th>Auteur</th>
           <th>Date de création</th>
+          <th>Aperçu</th>
+          <th>Mots-clés</th>
           <th>Actions</th>
         </tr>
       </thead>
