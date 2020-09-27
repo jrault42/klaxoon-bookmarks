@@ -3,12 +3,15 @@ import './App.css';
 import Table from './Table';
 import AddForm from './AddForm';
 import config from './config';
+import Overview from "./Overview";
 
 class App extends Component {
   constructor (props) {
     super(props);
     this.state = { };
     this.handleAddBtn = this.handleAddBtn.bind(this);
+    this.backToList = this.backToList.bind(this);
+    this.handleClickOverview = this.handleClickOverview.bind(this);
   }
 
   componentDidMount () {
@@ -17,6 +20,7 @@ class App extends Component {
       .then(
         (bookmarks) => {
           this.setState({
+            isEmptyState: true,
             isLoaded: true,
             bookmarks
           });
@@ -33,44 +37,66 @@ class App extends Component {
       );
   }
 
-  handleAddBtn (evt) {
-    evt.stopPropagation();
-    evt.preventDefault();
-    console.log('TU AS CLIQUE SUR LE BOUTON AjOUTER !');
+  handleAddBtn () {
     this.setState({
       ...this.state,
-      addBookmarkPage: true
-    });
-  }
-
-  handleAdded = () => {
-    this.setState({
-      ...this.state,
-      addBookmarkPage: false
+      addBookmarkPage: true,
+      isEmptyState: false
     });
   };
 
+  backToList () {
+    this.setState({
+      isEmptyState: true
+    });
+  }
+
+  handleClickOverview (bookmark) {
+    this.setState({
+      isEmptyState: false,
+      overviewPage: true,
+      bookmark
+    });
+  }
+
   render () {
-    const { bookmarks, error, isLoaded } = this.state;
+    const { isEmptyState, bookmarks, error, isLoaded, addBookmarkPage, overviewPage } = this.state;
+
     if (error) {
       return <div>Error: {error.message}</div>;
-    } else if (!isLoaded) {
+    }
+
+    else if (!isLoaded) {
       return <div>Loading...</div>;
-    } else if (this.state.addBookmarkPage) {
+    }
+
+    if (isEmptyState) {
+      if (!bookmarks.length) {
+        return <AddForm added={this.backToList} />;
+      } else {
+        return (
+          <div className='App mt-2'>
+            <span className="material-icons btn btn-success sticky-top m-2" onClick={this.handleAddBtn}>add</span>
+            <Table
+              backToList={this.backToList}
+              bookmarks={this.state.bookmarks}
+              handleClickOverview={this.handleClickOverview}
+            />,
+          </div>
+        );
+      }
+    }
+
+    else if (addBookmarkPage) {
       return (
         <div className='App mt-2'>
-          <AddForm added={this.handleAdded} />
+          <AddForm added={this.backToList}/>
         </div>
       );
-    } else if (!bookmarks.length) {
-      return <AddForm added={this.handleAdded} />;
-    } else {
-      return (
-        <div className='App mt-2'>
-          <button className='btn btn-success sticky-top m-2' onClick={this.handleAddBtn}>Ajouter</button>
-          <Table bookmarks={this.state.bookmarks} />,
-        </div>
-      );
+    }
+
+    else if (overviewPage) {
+      return <Overview backToList={this.backToList} bookmark={this.state.bookmark}  />;
     }
   }
 }

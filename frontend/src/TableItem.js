@@ -3,10 +3,8 @@ import React from 'react';
 function TableItem (props) {
   const {url, title, author, createDate, keyWords} = props.bookmark;
 
-  const handleClickOverview = evt => {
-    evt.preventDefault();
-    evt.stopPropagation();
-    console.log("COUCOU")
+  const handleClickOverview = () => {
+    props.handleClickOverview(props.bookmark);
   };
 
   return (

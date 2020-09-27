@@ -2,7 +2,14 @@ import React from 'react';
 import TableItem from './TableItem';
 
 function Table (props) {
-  const bookmarks = props.bookmarks.map((bookmark) => <TableItem key={bookmark.id} bookmark={bookmark} />);
+  const bookmarks = props.bookmarks.map(bookmark => {
+    return <TableItem
+              key={bookmark.id}
+              bookmark={bookmark}
+              backToList={props.backToList}
+              handleClickOverview={props.handleClickOverview}
+    />
+  });
 
   return (
     <table className='table table-hover'>
