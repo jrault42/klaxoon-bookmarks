@@ -39,6 +39,11 @@ definitions:
     items:
       $ref: "#/definitions/Bookmark"
 
+  keyWords:
+    type: array
+    items:
+      type: string
+
   bookmarkUrl:
     type: object
     required:
@@ -90,7 +95,7 @@ paths:
           schema:
             $ref: "#/definitions/Error"
 
-  /bookmarks/{id}:
+  /bookmarks/{type}/{id}:
     x-swagger-router-controller: controller
     get:
       description: get given bookmark
@@ -101,6 +106,12 @@ paths:
           required: true
           description: The id of the bookmark
           type: string
+        - name: type
+          in: path
+          required: true
+          description: The type of the bookmark (video or photo)
+          type: string
+          enum: [video, photo]
 
       responses:
         200:
@@ -113,22 +124,34 @@ paths:
             $ref: "#/definitions/Error"
 
     put:
-        description: update given bookmark
-        operationId: updateBookmark
-        parameters:
-          - name: id
-            in: path
-            required: true
-            description: The id of the bookmark
-            type: string
-  
-        responses:
-          204:
-            description: No content response
-          default:
-            description: unexpected error
-            schema:
-              $ref: "#/definitions/Error"
+      description: update given bookmark
+      operationId: updateBookmark
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: The id of the bookmark
+          type: string
+
+        - name: type
+          in: path
+          required: true
+          description: The type of the bookmark (video or photo)
+          type: string
+          enum: [video, photo]
+
+        - name: body
+          in: body
+          schema:
+            $ref: "#/definitions/keyWords"
+
+      responses:
+        204:
+          description: No content response
+        default:
+          description: unexpected error
+          schema:
+            $ref: "#/definitions/Error"
   
     delete:
       description: delete given bookmark
@@ -139,7 +162,12 @@ paths:
           required: true
           description: The id of the bookmark
           type: string
-  
+        - name: type
+          in: path
+          required: true
+          description: The type of the bookmark (video or photo)
+          type: string
+          enum: [video, photo]
       responses:
         204:
           description: No content response

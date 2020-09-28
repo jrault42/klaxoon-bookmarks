@@ -4,6 +4,7 @@ import Table from './Table';
 import AddForm from './AddForm';
 import config from './config';
 import Overview from "./Overview";
+import Update from "./Update";
 
 class App extends Component {
   constructor (props) {
@@ -11,7 +12,8 @@ class App extends Component {
     this.state = { };
     this.handleAddBtn = this.handleAddBtn.bind(this);
     this.backToList = this.backToList.bind(this);
-    this.handleClickOverview = this.handleClickOverview.bind(this);
+    this.showOverview = this.showOverview.bind(this);
+    this.showUpdate = this.showUpdate.bind(this);
   }
 
   componentDidMount () {
@@ -19,17 +21,20 @@ class App extends Component {
       .then(res => res.json())
       .then(
         (bookmarks) => {
+          bookmarks = bookmarks.map(bookmark => {
+            bookmark.keyWords = bookmark.keyWords ? bookmark.keyWords.join(', ') : '';
+            return bookmark
+          });
+
           this.setState({
             isEmptyState: true,
             isLoaded: true,
             bookmarks
           });
-        },
-        // Note: it's important to handle errors here
-        // instead of a catch() block so that we don't swallow
-        // exceptions from actual bugs in components.
-        (error) => {
+        })
+      .catch (error => {
           this.setState({
+            isEmptyState: true,
             isLoaded: true,
             error
           });
@@ -40,18 +45,21 @@ class App extends Component {
   handleAddBtn () {
     this.setState({
       ...this.state,
-      addBookmarkPage: true,
-      isEmptyState: false
+      isEmptyState: false,
+      addBookmarkPage: true
     });
   };
 
-  backToList () {
+  backToList (reloadList) {
     this.setState({
       isEmptyState: true
     });
+    if (reloadList) {
+      window.location.reload(true);
+    }
   }
 
-  handleClickOverview (bookmark) {
+  showOverview (bookmark) {
     this.setState({
       isEmptyState: false,
       overviewPage: true,
@@ -59,8 +67,16 @@ class App extends Component {
     });
   }
 
+  showUpdate (bookmark) {
+    this.setState({
+      isEmptyState: false,
+      updatePage: true,
+      bookmark
+    });
+  }
+
   render () {
-    const { isEmptyState, bookmarks, error, isLoaded, addBookmarkPage, overviewPage } = this.state;
+    const { isEmptyState, bookmarks, error, isLoaded } = this.state;
 
     if (error) {
       return <div>Error: {error.message}</div>;
@@ -80,14 +96,14 @@ class App extends Component {
             <Table
               backToList={this.backToList}
               bookmarks={this.state.bookmarks}
-              handleClickOverview={this.handleClickOverview}
-            />,
+              showOverview={this.showOverview}
+              showUpdate={this.showUpdate}
+            />
           </div>
         );
       }
     }
-
-    else if (addBookmarkPage) {
+    else if (this.state.addBookmarkPage) {
       return (
         <div className='App mt-2'>
           <AddForm added={this.backToList}/>
@@ -95,8 +111,12 @@ class App extends Component {
       );
     }
 
-    else if (overviewPage) {
+    else if (this.state.overviewPage) {
       return <Overview backToList={this.backToList} bookmark={this.state.bookmark}  />;
+    }
+
+    else if (this.state.updatePage) {
+      return <Update backToList={this.backToList} bookmark={this.state.bookmark}  />;
     }
   }
 }

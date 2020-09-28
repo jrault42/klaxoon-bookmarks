@@ -15,7 +15,7 @@ module.exports = {
    * @param options
    */
   updateInDB (coll, search, action, options) {
-    return db.collection(coll).update(search, action, options);
+    return db.collection(coll).updateOne(search, action, options);
   },
 
   /**

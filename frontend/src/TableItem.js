@@ -1,10 +1,35 @@
 import React from 'react';
+import config from "./config";
 
 function TableItem (props) {
   const {url, title, author, createDate, keyWords} = props.bookmark;
 
   const handleClickOverview = () => {
-    props.handleClickOverview(props.bookmark);
+    props.showOverview(props.bookmark);
+  };
+
+  const handleClickUpdate = () => {
+    props.showUpdate(props.bookmark);
+  };
+
+  const handleClickDelete = () => { if (window.confirm('Etes-vous sûr de vouloir supprimer ce bookmark ?')) {
+    fetch(`${config.backendUrl}/bookmarks/${props.bookmark.type}/${props.bookmark._id}`,
+      {
+        method: 'DELETE',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(res => {
+        if (res.status === 204) {
+          props.backToList(true);
+        } else {
+          throw new Error('Response status not good! Deletion failed.');
+        }
+      }).catch(err => console.error(err));
+
+  }
   };
 
   return (
@@ -14,12 +39,12 @@ function TableItem (props) {
       <td>{author}</td>
       <td>{createDate}</td>
       <td>
-        <span onClick={handleClickOverview} className="material-icons btn">visibility</span>
+        <span id='overview-btn' onClick={handleClickOverview} className="material-icons btn">visibility</span>
       </td>
       <td>{keyWords}</td>
       <td>
-        <span className="material-icons btn">create</span>
-        <span className="material-icons btn">delete</span>
+        <span id='update-btn' onClick={handleClickUpdate} className="material-icons btn">create</span>
+        <span id='delete-btn' onClick={handleClickDelete} className="material-icons btn">delete</span>
       </td>
     </tr>
   );

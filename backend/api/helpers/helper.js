@@ -26,16 +26,17 @@ module.exports = {
   /**
    *
    * @param id
+   * @param type
    * @returns {Promise<*|Promise>}
    */
-  async getBookmark (id) {
+  async getBookmark (id, type) {
     log.debug('getBookmark');
-    return dbHelper.findOneInDB('bookmarks', {_id: dbHelper.ObjectId(id)})
+    return dbHelper.findOneInDB(`${type}s`, {_id: dbHelper.ObjectId(id)})
   },
 
   /**
    *
-   * @param url
+   * @param encodedUrl
    * @returns {Promise<void>}
    */
   async createBookmark (encodedUrl) {
@@ -78,5 +79,32 @@ module.exports = {
     } else {
       log.error('Trying to add unknown type bookmark; doing nothing.');
     }
+  },
+
+  /**
+   *
+   * @param id
+   * @param type
+   * @param keyWords
+   * @returns {Promise<void>}
+   */
+  async updateBookmark (id, type, keyWords) {
+    const bookmark = await dbHelper.findOneInDB(`${type}s`, {_id: dbHelper.ObjectId(id)});
+    return dbHelper.updateInDB(`${type}s`, {
+      _id: dbHelper.ObjectId(id)},
+      {$set: {
+        keyWords: keyWords.concat(bookmark.keyWords)
+      }}
+      )
+  },
+
+  /**
+   *
+   * @param id
+   * @param type
+   * @returns {Promise<void>}
+   */
+  async deleteBookmark (id, type) {
+    return dbHelper.removeInDB(`${type}s`, {_id: dbHelper.ObjectId(id)});
   }
 };

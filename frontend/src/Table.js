@@ -7,7 +7,8 @@ function Table (props) {
               key={bookmark.id}
               bookmark={bookmark}
               backToList={props.backToList}
-              handleClickOverview={props.handleClickOverview}
+              showOverview={props.showOverview}
+              showUpdate={props.showUpdate}
     />
   });
 

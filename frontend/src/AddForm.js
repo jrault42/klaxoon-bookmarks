@@ -31,20 +31,23 @@ function AddFrom (props) {
   };
 
   return (
-    <form className='d-flex justify-content-center flex-column'>
-      <div className='form-group row justify-content-center'>
-        <p className='m-2'>Renseignez l'url d'une photo (flickr.com) ou d'une vidéo (vimeo.com).</p>
-      </div>
+    <>
+      <span className="material-icons btn" onClick={props.backToList}>arrow_back</span>
+      <h2 className='m-2'>Créer un bookmark</h2>
+      <form className='d-flex justify-content-center flex-column'>
+        <div className='form-group row justify-content-center'>
+          <p className='m-2'>Renseignez l'url d'une photo (flickr.com) ou d'une vidéo (vimeo.com).</p>
+        </div>
 
-      <div className='form-group row justify-content-center'>
-        <label htmlFor='urlinput' className='m-2'>URL</label>
-        <input id='urlinput' type='text' />
-      </div>
-      <div className='d-flex form-group justify-content-center'>
-        <button className='btn btn-success' onClick={handleClick}>Valider</button>
-      </div>
-    </form>
-
+        <div className='form-group row justify-content-center'>
+          <label htmlFor='urlinput' className='m-2'>URL</label>
+          <input id='urlinput' type='text' />
+        </div>
+        <div className='d-flex form-group justify-content-center'>
+          <button className='btn btn-success' onClick={handleClick}>Valider</button>
+        </div>
+      </form>
+    </>
   );
 }
 

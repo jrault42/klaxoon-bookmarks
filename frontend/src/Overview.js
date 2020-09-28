@@ -11,8 +11,8 @@ function Overview (props) {
       <iframe src={url} width={width} height={height} frameBorder="0"  title={title}/></>)
   }
   return (
-    <div className='d-flex justify-content-center flex-column'>
-      <span className="material-icons btn" onClick={props.backToList}>arrow_back</span>
+    <div>
+      <span className="material-icons btn" onClick={()=> props.backToList(false)}>arrow_back</span>
       <h2 className='m-2'>{title}</h2>
       {content}
     </div>
