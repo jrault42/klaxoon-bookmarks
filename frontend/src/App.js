@@ -3,6 +3,7 @@
 import React, { Component } from 'react';
 import './App.css';
 import Table from './Table';
+import Table2 from './Table2';
 import Pagination from './Pagination';
 import AddForm from './AddForm';
 import config from './config';
@@ -12,7 +13,10 @@ import Update from './Update';
 class App extends Component {
   constructor (props) {
     super(props);
-    this.state = { };
+    this.state = {
+      isEmptyState: true,
+      itemsPerPage: 5
+    };
     this.handleAddBtn = this.handleAddBtn.bind(this);
     this.backToList = this.backToList.bind(this);
     this.showOverview = this.showOverview.bind(this);
@@ -21,21 +25,23 @@ class App extends Component {
   }
 
   componentDidMount () {
-    fetch(`${config.backendUrl}/bookmarks`)
+    const offset = 0 // todo: faire le savant calcul dépendant de la page active et du nombre d'items par page
+    fetch(`${config.backendUrl}/bookmarks?offset=${offset}&limit=${this.state.itemsPerPage}`)
       .then(res => res.json())
       .then(
         (result) => {
-          const bookmarks = result.bookmarks.map(bookmark => {
+          /*const bookmarks = result.bookmarks.map(bookmark => {
             bookmark.keyWords = bookmark.keyWords ? bookmark.keyWords.join(', ') : '';
             return bookmark;
-          });
+          });*/
 
           this.setState({
             ...this.state,
             isEmptyState: true,
             isLoaded: true,
             activePage: 1,
-            bookmarks
+            bookmarks: result.bookmarks,
+            nbTotal: result.nbTotal
           });
         })
       .catch(error => {
@@ -72,7 +78,8 @@ class App extends Component {
       overviewPage: false,
       updatePage: false,
       addBookmarkPage: false,
-      isEmptyState: true
+      isEmptyState: true,
+      itemsPerPage: 5
     });
     if (reloadList) {
       window.location.reload(true);
@@ -102,7 +109,7 @@ class App extends Component {
   }
 
   render () {
-    const { isEmptyState, bookmarks, error, isLoaded, activePage } = this.state;
+    const { isEmptyState, bookmarks, error, isLoaded, nbTotal } = this.state;
 
     if (error) {
       return <div>Erreur: {error.message}</div>;
@@ -117,9 +124,10 @@ class App extends Component {
         return (
           <div className='App mt-2'>
             <span className='material-icons btn btn-success sticky-top m-2' onClick={this.handleAddBtn}>add</span>
-            <Table
+            <Table2
               backToList={this.backToList}
               bookmarks={bookmarks}
+              nbTotal={nbTotal}
               showOverview={this.showOverview}
               showUpdate={this.showUpdate}
               displayError={this.displayError}
