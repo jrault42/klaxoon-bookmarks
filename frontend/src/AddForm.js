@@ -1,9 +1,9 @@
+/* global fetch */
 import React from 'react';
 import './App.css';
 import config from './config';
 
 function AddFrom (props) {
-
   /**
    * Display error
    * @param evt
@@ -35,7 +35,7 @@ function AddFrom (props) {
       }).catch(err => {
         console.error(err);
         displayError(err.message);
-    });
+      });
   };
 
   /**
@@ -50,7 +50,7 @@ function AddFrom (props) {
 
   return (
     <>
-      <span className="material-icons btn" onClick={props.backToList}>arrow_back</span>
+      <span className='material-icons btn' onClick={props.backToList}>arrow_back</span>
       <h2 className='m-2'>Créer un bookmark</h2>
       <form className='d-flex justify-content-center flex-column'>
         <div className='form-group row justify-content-center'>

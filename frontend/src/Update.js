@@ -1,8 +1,9 @@
+/* global fetch */
+
 import React from 'react';
-import config from "./config";
+import config from './config';
 
 function Update (props) {
-
   /**
    *
    * @param evt
@@ -13,7 +14,7 @@ function Update (props) {
     const keyWords = document.getElementById('keywords-input').value.split(' ');
     const overwrite = document.getElementById('overwrite').checked;
 
-    fetch(`${config.backendUrl}/bookmarks/${props.bookmark.type}/${props.bookmark._id}?overwrite=${overwrite}`,
+    fetch(`${config.backendUrl}/bookmarks/${props.bookmark._id}?overwrite=${overwrite}`,
       {
         method: 'PUT',
         headers: {
@@ -31,7 +32,7 @@ function Update (props) {
       }).catch(err => {
         console.error(err);
         displayError(err.message);
-    });
+      });
   };
 
   /**
@@ -44,10 +45,9 @@ function Update (props) {
     errorP.classList.remove('d-none');
   };
 
-
   return (
     <div className='m-2'>
-      <span className="material-icons btn" onClick={()=> props.backToList(true)}>arrow_back</span>
+      <span className='material-icons btn' onClick={() => props.backToList(true)}>arrow_back</span>
       <h2 className='m-2'>{props.bookmark.title}</h2>
       <form>
         <div className='form-group row m-2'>

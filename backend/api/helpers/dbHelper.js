@@ -56,7 +56,7 @@ module.exports = {
    * @returns {UnorderedBulkOperation|*}
    */
   removeInDB (coll, options) {
-    return db.collection(coll).remove(options);
+    return db.collection(coll).deleteOne(options);
   },
 
   ObjectId (id) {

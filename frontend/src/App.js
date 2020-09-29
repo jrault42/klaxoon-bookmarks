@@ -1,11 +1,13 @@
+/* global fetch */
+
 import React, { Component } from 'react';
 import './App.css';
 import Table from './Table';
 import Pagination from './Pagination';
 import AddForm from './AddForm';
 import config from './config';
-import Overview from "./Overview";
-import Update from "./Update";
+import Overview from './Overview';
+import Update from './Update';
 
 class App extends Component {
   constructor (props) {
@@ -22,10 +24,10 @@ class App extends Component {
     fetch(`${config.backendUrl}/bookmarks`)
       .then(res => res.json())
       .then(
-        (bookmarks) => {
-          bookmarks = bookmarks.map(bookmark => {
+        (result) => {
+          const bookmarks = result.bookmarks.map(bookmark => {
             bookmark.keyWords = bookmark.keyWords ? bookmark.keyWords.join(', ') : '';
-            return bookmark
+            return bookmark;
           });
 
           this.setState({
@@ -36,14 +38,14 @@ class App extends Component {
             bookmarks
           });
         })
-      .catch (error => {
-          this.setState({
-            ...this.state,
-            isEmptyState: true,
-            isLoaded: true,
-            error
-          });
-        }
+      .catch(error => {
+        this.setState({
+          ...this.state,
+          isEmptyState: true,
+          isLoaded: true,
+          error
+        });
+      }
       );
   }
 
@@ -63,7 +65,7 @@ class App extends Component {
       isEmptyState: false,
       addBookmarkPage: true
     });
-  };
+  }
 
   backToList (reloadList) {
     this.setState({
@@ -104,9 +106,7 @@ class App extends Component {
 
     if (error) {
       return <div>Erreur: {error.message}</div>;
-    }
-
-    else if (!isLoaded) {
+    } else if (!isLoaded) {
       return <div>Loading...</div>;
     }
 
@@ -116,7 +116,7 @@ class App extends Component {
       } else {
         return (
           <div className='App mt-2'>
-            <span className="material-icons btn btn-success sticky-top m-2" onClick={this.handleAddBtn}>add</span>
+            <span className='material-icons btn btn-success sticky-top m-2' onClick={this.handleAddBtn}>add</span>
             <Table
               backToList={this.backToList}
               bookmarks={bookmarks}
@@ -125,25 +125,20 @@ class App extends Component {
               displayError={this.displayError}
             />
             <p id='errorP' className='d-none text-danger'>Erreur !</p>
-            <Pagination/>
+            <Pagination />
           </div>
         );
       }
-    }
-    else if (this.state.addBookmarkPage) {
+    } else if (this.state.addBookmarkPage) {
       return (
         <div className='App mt-2'>
-          <AddForm backToList={this.backToList}/>
+          <AddForm backToList={this.backToList} />
         </div>
       );
-    }
-
-    else if (this.state.overviewPage) {
-      return <Overview backToList={this.backToList} bookmark={this.state.bookmark}  />;
-    }
-
-    else if (this.state.updatePage) {
-      return <Update backToList={this.backToList} bookmark={this.state.bookmark}  />;
+    } else if (this.state.overviewPage) {
+      return <Overview backToList={this.backToList} bookmark={this.state.bookmark} />;
+    } else if (this.state.updatePage) {
+      return <Update backToList={this.backToList} bookmark={this.state.bookmark} />;
     }
   }
 }

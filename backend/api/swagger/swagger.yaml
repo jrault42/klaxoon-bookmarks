@@ -35,9 +35,17 @@ definitions:
         type: integer
 
   Bookmarks:
-    type: array
-    items:
-      $ref: "#/definitions/Bookmark"
+    type: object
+    required:
+      - bookmarks
+      - nbTotal
+    properties:
+      bookmarks:
+        type: array
+        items:
+          $ref: "#/definitions/Bookmark"
+      nbTotal:
+        type: integer
 
   keyWords:
     type: array
@@ -112,7 +120,7 @@ paths:
           schema:
             $ref: "#/definitions/Error"
 
-  /bookmarks/{type}/{id}:
+  /bookmarks/{id}:
     x-swagger-router-controller: controller
     get:
       description: get given bookmark
@@ -123,12 +131,6 @@ paths:
           required: true
           description: The id of the bookmark
           type: string
-        - name: type
-          in: path
-          required: true
-          description: The type of the bookmark (video or photo)
-          type: string
-          enum: [video, photo]
 
       responses:
         200:
@@ -149,13 +151,6 @@ paths:
           required: true
           description: The id of the bookmark
           type: string
-
-        - name: type
-          in: path
-          required: true
-          description: The type of the bookmark (video or photo)
-          type: string
-          enum: [video, photo]
 
         - name: overwrite
           in: query
@@ -184,12 +179,6 @@ paths:
           required: true
           description: The id of the bookmark
           type: string
-        - name: type
-          in: path
-          required: true
-          description: The type of the bookmark (video or photo)
-          type: string
-          enum: [video, photo]
       responses:
         204:
           description: No content response

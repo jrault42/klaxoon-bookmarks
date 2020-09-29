@@ -14,24 +14,29 @@ moment.locale('fr');
 module.exports = {
   /**
    *
-   * @returns {Promise}
+   * @param offset
+   * @param limit
+   * @returns {Promise<{nbTotal, bookmarks: (*|T[]|string)}>}
    */
-  async getBookmarks () {
+  async getBookmarks (offset, limit) {
     log.debug('getBookmarks');
-    const videos = await dbHelper.findInDB('videos', {}).toArray();
-    const photos = await dbHelper.findInDB('photos', {}).toArray();
-    return videos.concat(photos)
+
+    const nbTotal = await dbHelper.findInDB('bookmarks', {}).count();
+    const bookmarks = await dbHelper.findInDB('bookmarks', {}).skip(offset).limit(limit).toArray();
+    return {
+      nbTotal,
+      bookmarks
+    };
   },
 
   /**
-   *
+   * Get a specific bookmark
    * @param id
-   * @param type
    * @returns {Promise<*|Promise>}
    */
-  async getBookmark (id, type) {
+  async getBookmark (id) {
     log.debug('getBookmark');
-    return dbHelper.findOneInDB(`${type}s`, {_id: dbHelper.ObjectId(id)})
+    return dbHelper.findOneInDB('bookmarks', {_id: dbHelper.ObjectId(id)});
   },
 
   /**
@@ -47,15 +52,15 @@ module.exports = {
       : `https://www.flickr.com/services/oembed/?format=json&url=${encodedUrl}`;
 
     const json = await (await fetch(urlToGet)).json();
-    if (!json) { throw new Error('Error while getting content with oembed.') }
+    if (!json) { throw new Error('Error while getting content with oembed.'); }
 
     const {type, title, author_name, width, height} = json;
 
     if (json.type === 'video') {
       const html = json.html;
       const slicedHtml = html.slice(html.indexOf('https:'));
-      await dbHelper.insertInDB('videos', {
-        url: slicedHtml.slice(0, slicedHtml.indexOf('\"')),
+      await dbHelper.insertInDB('bookmarks', {
+        url: slicedHtml.slice(0, slicedHtml.indexOf('"')),
         type,
         title,
         author: author_name,
@@ -64,9 +69,9 @@ module.exports = {
         height,
         duration: json.duration,
         keyWords: []
-    })
+      });
     } else if (json.type === 'photo') {
-      await dbHelper.insertInDB('photos', {
+      await dbHelper.insertInDB('bookmarks', {
         url: json.url,
         type,
         title,
@@ -75,7 +80,7 @@ module.exports = {
         width,
         height,
         keyWords: []
-      })
+      });
     } else {
       log.error('Trying to add unknown type bookmark; doing nothing.');
     }
@@ -84,28 +89,26 @@ module.exports = {
   /**
    *
    * @param id
-   * @param type
    * @param keyWords
    * @param overwrite
    * @returns {Promise<void>}
    */
-  async updateBookmark (id, type, keyWords, overwrite) {
-    const bookmark = await dbHelper.findOneInDB(`${type}s`, {_id: dbHelper.ObjectId(id)});
-    return dbHelper.updateInDB(`${type}s`, {
+  async updateBookmark (id, keyWords, overwrite) {
+    const bookmark = await dbHelper.findOneInDB('bookmarks', {_id: dbHelper.ObjectId(id)});
+    return dbHelper.updateInDB('bookmarks', {
       _id: dbHelper.ObjectId(id)},
       {$set: {
         keyWords: overwrite ? keyWords : keyWords.concat(bookmark.keyWords)
       }}
-      )
+      );
   },
 
   /**
    *
    * @param id
-   * @param type
    * @returns {Promise<void>}
    */
-  async deleteBookmark (id, type) {
-    return dbHelper.removeInDB(`${type}s`, {_id: dbHelper.ObjectId(id)});
+  async deleteBookmark (id) {
+    return dbHelper.removeInDB('bookmarks', {_id: dbHelper.ObjectId(id)});
   }
 };

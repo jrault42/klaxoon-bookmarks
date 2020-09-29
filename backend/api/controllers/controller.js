@@ -27,7 +27,9 @@ const bookmarksController = {
   async getBookmarks (req, res) {
     log.debug('getBookmarks');
     try {
-      const bookmarks = await helper.getBookmarks();
+      const offset = req.swagger.params.offset.value;
+      const limit = req.swagger.params.limit.value;
+      const bookmarks = await helper.getBookmarks(offset, limit);
       res.send(bookmarks);
     } catch (err) {
       expressHelper.handleError(err, res);
@@ -43,7 +45,7 @@ const bookmarksController = {
     log.debug('getBookmark');
     try {
       const id = req.swagger.params.id.value;
-      const bookmark = await helper.getBookmark(id, type);
+      const bookmark = await helper.getBookmark(id);
       res.send(bookmark);
     } catch (err) {
       expressHelper.handleError(err, res);
@@ -78,10 +80,9 @@ const bookmarksController = {
     log.debug('updateBookmark');
     try {
       const id = req.swagger.params.id.value;
-      const type = req.swagger.params.type.value;
       const body = req.swagger.params.body.value;
       const overwrite = req.swagger.params.overwrite.value;
-      await helper.updateBookmark(id, type, body, overwrite);
+      await helper.updateBookmark(id, body, overwrite);
       res.status(201);
       res.end();
     } catch (err) {
@@ -99,8 +100,7 @@ const bookmarksController = {
     log.debug('deleteBookmark');
     try {
       const id = req.swagger.params.id.value;
-      const type = req.swagger.params.type.value;
-      await helper.deleteBookmark(id, type);
+      await helper.deleteBookmark(id);
       res.status(204);
       res.end();
     } catch (err) {
