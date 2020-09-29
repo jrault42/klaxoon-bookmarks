@@ -69,6 +69,23 @@ paths:
     get:
       description: get all bookmarks
       operationId: getBookmarks
+      parameters:
+        - name: offset
+          in: query
+          type: integer
+          required: false
+          default: 0
+          minimum: 0
+          description: The number of items to skip before starting to collect the result set.
+
+        - name: limit
+          in: query
+          type: integer
+          required: false
+          default: 20
+          minimum: 1
+          maximum: 100
+          description: The numbers of items to return.
       responses:
         200:
           description: An array of bookmarks
@@ -83,10 +100,10 @@ paths:
       description: Create a bookmark
       operationId: createBookmark
       parameters:
-      - name: body
-        in: body
-        schema:
-          $ref: "#/definitions/bookmarkUrl"
+        - name: body
+          in: body
+          schema:
+            $ref: "#/definitions/bookmarkUrl"
       responses:
         201:
           description: Null response
@@ -139,6 +156,11 @@ paths:
           description: The type of the bookmark (video or photo)
           type: string
           enum: [video, photo]
+
+        - name: overwrite
+          in: query
+          type: boolean
+          required: false
 
         - name: body
           in: body

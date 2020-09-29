@@ -3,13 +3,18 @@ import './App.css';
 import config from './config';
 
 function AddFrom (props) {
+
+  /**
+   * Display error
+   * @param evt
+   */
   const handleClick = evt => {
     evt.preventDefault();
     evt.stopPropagation();
     const encodedUrl = encodeURIComponent(document.getElementById('urlinput').value);
 
     if (!encodedUrl.includes('vimeo.com') && !encodedUrl.includes('flickr.com')) {
-      // todo: display error bad url (only flickr or vimeo)
+      displayError('URL non acceptée. Vous ne pouvez ajouter un lien que de flickr.com ou vimeo.com.');
       return;
     }
     fetch(`${config.backendUrl}/bookmarks`,
@@ -23,11 +28,24 @@ function AddFrom (props) {
       })
       .then(res => {
         if (res.status === 201) {
-          props.added();
+          props.backToList(true);
         } else {
-          throw new Error('Response status not good! Add failed.');
+          throw new Error('Une erreur est survenue.');
         }
-      }).catch(err => console.error(err));
+      }).catch(err => {
+        console.error(err);
+        displayError(err.message);
+    });
+  };
+
+  /**
+   * Display error
+   * @param err
+   */
+  const displayError = err => {
+    const errorP = document.getElementById('errorP');
+    errorP.innerText = err;
+    errorP.classList.remove('d-none');
   };
 
   return (
@@ -47,6 +65,7 @@ function AddFrom (props) {
           <button className='btn btn-success' onClick={handleClick}>Valider</button>
         </div>
       </form>
+      <p id='errorP' className='d-none text-danger'>Erreur !</p>
     </>
   );
 }

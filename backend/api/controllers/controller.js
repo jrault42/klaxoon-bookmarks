@@ -80,7 +80,8 @@ const bookmarksController = {
       const id = req.swagger.params.id.value;
       const type = req.swagger.params.type.value;
       const body = req.swagger.params.body.value;
-      await helper.updateBookmark(id, type, body);
+      const overwrite = req.swagger.params.overwrite.value;
+      await helper.updateBookmark(id, type, body, overwrite);
       res.status(201);
       res.end();
     } catch (err) {

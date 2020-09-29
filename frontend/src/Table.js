@@ -4,11 +4,12 @@ import TableItem from './TableItem';
 function Table (props) {
   const bookmarks = props.bookmarks.map(bookmark => {
     return <TableItem
-              key={bookmark.id}
+              key={bookmark._id}
               bookmark={bookmark}
               backToList={props.backToList}
               showOverview={props.showOverview}
               showUpdate={props.showUpdate}
+              displayError={props.displayError}
     />
   });
 

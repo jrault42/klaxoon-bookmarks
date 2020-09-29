@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
 import Table from './Table';
+import Pagination from './Pagination';
 import AddForm from './AddForm';
 import config from './config';
 import Overview from "./Overview";
@@ -14,6 +15,7 @@ class App extends Component {
     this.backToList = this.backToList.bind(this);
     this.showOverview = this.showOverview.bind(this);
     this.showUpdate = this.showUpdate.bind(this);
+    this.displayError = this.displayError.bind(this);
   }
 
   componentDidMount () {
@@ -27,19 +29,32 @@ class App extends Component {
           });
 
           this.setState({
+            ...this.state,
             isEmptyState: true,
             isLoaded: true,
+            activePage: 1,
             bookmarks
           });
         })
       .catch (error => {
           this.setState({
+            ...this.state,
             isEmptyState: true,
             isLoaded: true,
             error
           });
         }
       );
+  }
+
+  /**
+   * Display error
+   * @param err
+   */
+  displayError (err) {
+    const errorP = document.getElementById('errorP');
+    errorP.innerText = err;
+    errorP.classList.remove('d-none');
   }
 
   handleAddBtn () {
@@ -52,6 +67,9 @@ class App extends Component {
 
   backToList (reloadList) {
     this.setState({
+      overviewPage: false,
+      updatePage: false,
+      addBookmarkPage: false,
       isEmptyState: true
     });
     if (reloadList) {
@@ -61,6 +79,7 @@ class App extends Component {
 
   showOverview (bookmark) {
     this.setState({
+      ...this.state,
       isEmptyState: false,
       overviewPage: true,
       bookmark
@@ -69,17 +88,22 @@ class App extends Component {
 
   showUpdate (bookmark) {
     this.setState({
+      ...this.state,
       isEmptyState: false,
       updatePage: true,
       bookmark
     });
   }
 
+  handlePageChange () {
+
+  }
+
   render () {
-    const { isEmptyState, bookmarks, error, isLoaded } = this.state;
+    const { isEmptyState, bookmarks, error, isLoaded, activePage } = this.state;
 
     if (error) {
-      return <div>Error: {error.message}</div>;
+      return <div>Erreur: {error.message}</div>;
     }
 
     else if (!isLoaded) {
@@ -88,17 +112,20 @@ class App extends Component {
 
     if (isEmptyState) {
       if (!bookmarks.length) {
-        return <AddForm added={this.backToList} />;
+        return <AddForm backToList={this.backToList} />;
       } else {
         return (
           <div className='App mt-2'>
             <span className="material-icons btn btn-success sticky-top m-2" onClick={this.handleAddBtn}>add</span>
             <Table
               backToList={this.backToList}
-              bookmarks={this.state.bookmarks}
+              bookmarks={bookmarks}
               showOverview={this.showOverview}
               showUpdate={this.showUpdate}
+              displayError={this.displayError}
             />
+            <p id='errorP' className='d-none text-danger'>Erreur !</p>
+            <Pagination/>
           </div>
         );
       }
@@ -106,7 +133,7 @@ class App extends Component {
     else if (this.state.addBookmarkPage) {
       return (
         <div className='App mt-2'>
-          <AddForm added={this.backToList}/>
+          <AddForm backToList={this.backToList}/>
         </div>
       );
     }

@@ -12,25 +12,29 @@ function TableItem (props) {
     props.showUpdate(props.bookmark);
   };
 
-  const handleClickDelete = () => { if (window.confirm('Etes-vous sûr de vouloir supprimer ce bookmark ?')) {
-    fetch(`${config.backendUrl}/bookmarks/${props.bookmark.type}/${props.bookmark._id}`,
-      {
-        method: 'DELETE',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json'
-        }
-      })
-      .then(res => {
-        if (res.status === 204) {
-          props.backToList(true);
-        } else {
-          throw new Error('Response status not good! Deletion failed.');
-        }
-      }).catch(err => console.error(err));
-
-  }
+  const handleClickDelete = () => {
+    if (window.confirm('Etes-vous sûr de vouloir supprimer ce bookmark ?')) {
+      fetch(`${config.backendUrl}/bookmarks/${props.bookmark.type}/${props.bookmark._id}`,
+        {
+          method: 'DELETE',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+          }
+        })
+        .then(res => {
+          if (res.status === 204) {
+            props.backToList(true);
+          } else {
+            throw new Error('Une erreur est survenue lors de la suppression.');
+          }
+        }).catch(err => {
+          console.error(err);
+          props.displayError(err.message);
+      });
+    }
   };
+
 
   return (
     <tr>

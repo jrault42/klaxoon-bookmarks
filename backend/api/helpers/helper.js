@@ -86,14 +86,15 @@ module.exports = {
    * @param id
    * @param type
    * @param keyWords
+   * @param overwrite
    * @returns {Promise<void>}
    */
-  async updateBookmark (id, type, keyWords) {
+  async updateBookmark (id, type, keyWords, overwrite) {
     const bookmark = await dbHelper.findOneInDB(`${type}s`, {_id: dbHelper.ObjectId(id)});
     return dbHelper.updateInDB(`${type}s`, {
       _id: dbHelper.ObjectId(id)},
       {$set: {
-        keyWords: keyWords.concat(bookmark.keyWords)
+        keyWords: overwrite ? keyWords : keyWords.concat(bookmark.keyWords)
       }}
       )
   },
