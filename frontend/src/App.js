@@ -2,9 +2,7 @@
 
 import React, { Component } from 'react';
 import './App.css';
-import Table from './Table';
-import Table2 from './Table2';
-import Pagination from './Pagination';
+import PaginatedTable from './PaginatedTable';
 import AddForm from './AddForm';
 import config from './config';
 import Overview from './Overview';
@@ -22,24 +20,18 @@ class App extends Component {
     this.showOverview = this.showOverview.bind(this);
     this.showUpdate = this.showUpdate.bind(this);
     this.displayError = this.displayError.bind(this);
+    this.setKeyWords = this.setKeyWords.bind(this);
   }
 
   componentDidMount () {
-    const offset = 0 // todo: faire le savant calcul dépendant de la page active et du nombre d'items par page
-    fetch(`${config.backendUrl}/bookmarks?offset=${offset}&limit=${this.state.itemsPerPage}`)
+    fetch(`${config.backendUrl}/bookmarks`)
       .then(res => res.json())
       .then(
         (result) => {
-          /*const bookmarks = result.bookmarks.map(bookmark => {
-            bookmark.keyWords = bookmark.keyWords ? bookmark.keyWords.join(', ') : '';
-            return bookmark;
-          });*/
-
           this.setState({
             ...this.state,
             isEmptyState: true,
             isLoaded: true,
-            activePage: 1,
             bookmarks: result.bookmarks,
             nbTotal: result.nbTotal
           });
@@ -104,8 +96,13 @@ class App extends Component {
     });
   }
 
-  handlePageChange () {
-
+  setKeyWords (keyWords) {
+    this.setState({
+      ...this.state,
+      isEmptyState: false,
+      updatePage: true,
+      keyWords
+    });
   }
 
   render () {
@@ -124,7 +121,7 @@ class App extends Component {
         return (
           <div className='App mt-2'>
             <span className='material-icons btn btn-success sticky-top m-2' onClick={this.handleAddBtn}>add</span>
-            <Table2
+            <PaginatedTable
               backToList={this.backToList}
               bookmarks={bookmarks}
               nbTotal={nbTotal}
@@ -133,7 +130,6 @@ class App extends Component {
               displayError={this.displayError}
             />
             <p id='errorP' className='d-none text-danger'>Erreur !</p>
-            <Pagination />
           </div>
         );
       }

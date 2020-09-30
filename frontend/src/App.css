@@ -2,10 +2,8 @@
   text-align: center;
 }
 
-#vimeo-btn {
-  background-image:'../public/vimeo.png';
-}
-
-#flickr-btn {
-  background-image:'../public/flickr.png';
+.pagination-status__item {
+  display: inline;
+  text-align: center;
+  padding: 2px ;
 }

@@ -90,7 +90,7 @@ paths:
           in: query
           type: integer
           required: false
-          default: 20
+          default: 0
           minimum: 1
           maximum: 100
           description: The numbers of items to return.
