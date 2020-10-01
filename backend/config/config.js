@@ -17,7 +17,8 @@ const config = {
   },
 
   // MongoDB configuration
-  mongodb: 'mongodb://localhost:27017/bookmarks'
+  mongodb: 'mongodb://localhost:27017/bookmarks',
+  testmongodb: 'mongodb://localhost:27017/bookmarks-test'
 };
 
 module.exports = config;

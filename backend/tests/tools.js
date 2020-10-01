@@ -1,19 +1,23 @@
 'use strict';
 
 const config = require('../config/config');
-const mongo = require('../api/database');
+const Database = require('../api/database');
 
 module.exports =
 {
   openDB () {
-    return mongo.connect(config.test.mongo);
+    return Database.connect(config.testmongodb);
   },
 
   clearDB () {
-    return mongo.db.dropDatabase();
+    return Database.db.dropDatabase();
   },
 
   closeDB () {
-    return mongo.db.close();
+    return Database.db.close();
+  },
+
+  ObjectID () {
+    return Database.ObjectID();
   }
 };
