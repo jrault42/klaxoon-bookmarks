@@ -1,10 +1,12 @@
-/* global describe it before after */
+/* global describe it before */
 'use strict';
 const chai = require('chai');
 const supertest = require('supertest');
 const expect = chai.expect;
 const appjs = require('../app.js');
 const tools = require('./tools');
+const moment = require('moment');
+moment.locale('fr');
 
 let agent;
 
@@ -24,10 +26,6 @@ describe('Bookmarks tests:', function () {
         console.log(err);
       });
   });
-
-  // after(() => {
-  //   tools.closeDB();
-  // });
 
   it('Get the welcome API method', () => {
     return agent
@@ -56,7 +54,7 @@ describe('Bookmarks tests:', function () {
   it('should create the bookmark', () => {
     return agent
       .post(`/bookmarks?mongoid=${objectID1}`)
-      .send({bookmarkUrl: 'http%3A%2F%2Fflickr.com%2Fphotos%2Fbees%2F2362225867%2F'})
+      .send({bookmarkUrl: 'https%3A%2F%2Fwww.flickr.com%2Fphotos%2Fenneafive%2F50400450827%2Fin%2Fexplore-2020-09-30%2F'})
       .expect(201);
   });
 
@@ -73,6 +71,25 @@ describe('Bookmarks tests:', function () {
   });
 
   /*
+ GET
+ */
+  it('should get the created bookmark: good params', () => {
+    const createDate = moment().format('L');
+    return agent
+      .get(`/bookmarks/${objectID1}`)
+      .expect(200)
+      .then(res => {
+        expect(res.body.keyWords.length).equal(0);
+        expect(res.body.url).equal('https://live.staticflickr.com/65535/50400450827_4585753ab1_b.jpg');
+        expect(res.body.title).equal('Amblève');
+        expect(res.body.author).equal('enneafive');
+        expect(res.body.createDate).equal(createDate);
+        expect(res.body.width).equal(1024);
+        expect(res.body.height).equal(682);
+      });
+  });
+
+  /*
  PUT: update
  */
   it('should update the bookmark keywords', () => {
@@ -85,7 +102,7 @@ describe('Bookmarks tests:', function () {
   /*
   GET
   */
-  it('should get the updated bookmark : has good keyWords', () => {
+  it('should get the updated bookmark: has good keyWords', () => {
     return agent
       .get(`/bookmarks/${objectID1}`)
       .expect(200)
@@ -158,5 +175,14 @@ describe('Bookmarks tests:', function () {
     return agent
       .delete(`/bookmarks/`)
       .expect(405);
+  });
+
+  /*
+ DELETE
+ */
+  it('should fail to delete: do not exist', () => {
+    return agent
+      .delete(`/bookmarks/${objectID2}`)
+      .expect(404);
   });
 });

@@ -36,7 +36,13 @@ module.exports = {
    */
   async getBookmark (id) {
     log.debug('getBookmark');
-    return dbHelper.findOneInDB('bookmarks', {_id: dbHelper.ObjectId(id)});
+    const bookmark = await dbHelper.findOneInDB('bookmarks', {_id: dbHelper.ObjectId(id)});
+    if (!bookmark) {
+      const error = new Error('Bookmark not found');
+      error.code = 404;
+      throw error;
+    }
+    return bookmark;
   },
 
   /**
@@ -104,7 +110,9 @@ module.exports = {
   async updateBookmark (id, keyWords, overwrite) {
     const bookmark = await dbHelper.findOneInDB('bookmarks', {_id: dbHelper.ObjectId(id)});
     if (!bookmark) {
-      throw new Error('Bookmark not found');
+      const error = new Error('Bookmark not found');
+      error.code = 404;
+      throw error;
     }
     return dbHelper.updateInDB('bookmarks', {
       _id: dbHelper.ObjectId(id)},
@@ -120,6 +128,12 @@ module.exports = {
    * @returns {Promise<void>}
    */
   async deleteBookmark (id) {
+    const bookmark = await dbHelper.findOneInDB('bookmarks', {_id: dbHelper.ObjectId(id)});
+    if (!bookmark) {
+      const error = new Error('Bookmark not found');
+      error.code = 404;
+      throw error;
+    }
     return dbHelper.removeInDB('bookmarks', {_id: dbHelper.ObjectId(id)});
   }
 };
