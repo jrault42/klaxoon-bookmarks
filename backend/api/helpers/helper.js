@@ -42,9 +42,10 @@ module.exports = {
   /**
    *
    * @param encodedUrl
+   * @param mongoid
    * @returns {Promise<void>}
    */
-  async createBookmark (encodedUrl) {
+  async createBookmark (encodedUrl, mongoid) {
     log.debug('createBookmark');
 
     const urlToGet = encodedUrl.includes('vimeo.com')
@@ -56,10 +57,11 @@ module.exports = {
 
     const {type, title, author_name, width, height} = json;
 
+    let bookmarkObject;
     if (json.type === 'video') {
       const html = json.html;
       const slicedHtml = html.slice(html.indexOf('https:'));
-      await dbHelper.insertInDB('bookmarks', {
+      bookmarkObject = {
         url: slicedHtml.slice(0, slicedHtml.indexOf('"')),
         type,
         title,
@@ -69,9 +71,9 @@ module.exports = {
         height,
         duration: json.duration,
         keyWords: []
-      });
+      };
     } else if (json.type === 'photo') {
-      await dbHelper.insertInDB('bookmarks', {
+      bookmarkObject = {
         url: json.url,
         type,
         title,
@@ -80,10 +82,16 @@ module.exports = {
         width,
         height,
         keyWords: []
-      });
+      };
     } else {
       log.error('Trying to add unknown type bookmark; doing nothing.');
+      return;
     }
+    // Insert in DB
+    if (mongoid) {
+      bookmarkObject._id = dbHelper.ObjectId(mongoid);
+    }
+    await dbHelper.insertInDB('bookmarks', bookmarkObject);
   },
 
   /**

@@ -62,7 +62,8 @@ const bookmarksController = {
     log.debug('createBookmark');
     try {
       const bookmarkUrl = req.swagger.params.body.raw.bookmarkUrl;
-      await helper.createBookmark(bookmarkUrl);
+      const mongoid = req.swagger.params.mongoid && req.swagger.params.mongoid.value;
+      await helper.createBookmark(bookmarkUrl, mongoid);
       res.status(201);
       res.end();
     } catch (err) {

@@ -112,6 +112,10 @@ paths:
           in: body
           schema:
             $ref: "#/definitions/bookmarkUrl"
+        - name: mongoid
+          in: query
+          type: string
+          required: false
       responses:
         201:
           description: Null response
