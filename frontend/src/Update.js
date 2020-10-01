@@ -24,7 +24,7 @@ function Update (props) {
         body: JSON.stringify(keyWords)
       })
       .then(res => {
-        if (res.status === 201) {
+        if (res.status === 200) {
           props.backToList(true);
         } else {
           throw new Error('Une erreur est survenue lors de la mise à jour du bookmark.');

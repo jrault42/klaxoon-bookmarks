@@ -95,10 +95,13 @@ module.exports = {
    */
   async updateBookmark (id, keyWords, overwrite) {
     const bookmark = await dbHelper.findOneInDB('bookmarks', {_id: dbHelper.ObjectId(id)});
+    if (!bookmark) {
+      throw new Error('Bookmark not found');
+    }
     return dbHelper.updateInDB('bookmarks', {
       _id: dbHelper.ObjectId(id)},
       {$set: {
-        keyWords: overwrite ? keyWords : keyWords.concat(bookmark.keyWords)
+        keyWords: overwrite ? keyWords : bookmark.keyWords.concat(keyWords)
       }}
       );
   },

@@ -91,7 +91,7 @@ paths:
           type: integer
           required: false
           default: 0
-          minimum: 1
+          minimum: 0
           maximum: 100
           description: The numbers of items to return.
       responses:
@@ -122,19 +122,20 @@ paths:
 
   /bookmarks/{id}:
     x-swagger-router-controller: controller
+
+    parameters:
+    - name: id
+      in: path
+      required: true
+      description: The id of the bookmark
+      type: string
+
     get:
       description: get given bookmark
       operationId: getBookmark
-      parameters:
-        - name: id
-          in: path
-          required: true
-          description: The id of the bookmark
-          type: string
-
       responses:
         200:
-          description: Expected response to a valid request
+          description: returns created bookmark
           schema:
             $ref: "#/definitions/Bookmark"
         default:
@@ -146,12 +147,6 @@ paths:
       description: update given bookmark
       operationId: updateBookmark
       parameters:
-        - name: id
-          in: path
-          required: true
-          description: The id of the bookmark
-          type: string
-
         - name: overwrite
           in: query
           type: boolean
@@ -163,8 +158,8 @@ paths:
             $ref: "#/definitions/keyWords"
 
       responses:
-        204:
-          description: No content response
+        200:
+          description: empty 200 response
         default:
           description: unexpected error
           schema:
@@ -173,12 +168,6 @@ paths:
     delete:
       description: delete given bookmark
       operationId: deleteBookmark
-      parameters:
-        - name: id
-          in: path
-          required: true
-          description: The id of the bookmark
-          type: string
       responses:
         204:
           description: No content response
