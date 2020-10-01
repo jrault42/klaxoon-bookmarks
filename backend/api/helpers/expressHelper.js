@@ -16,37 +16,14 @@ module.exports = {
   handleError (err, res) {
     log.info('handleError, err:', err);
     if (err === 403 || err.code === 403) {
-      if (err.message === 'only 2 periods by mode') {
-        return this.sendAuthorizedError(res, true);
-      }
       return this.sendAuthorizedError(res, false);
     }
-    if (err.toString().indexOf('Invalid URI') !== -1) return this.sendError(res, 422, 'Invalid URI');
+
+    if (err === 404 || err.code === 404) {
+      return this.sendError(res, 404, 'Not found.');
+    }
     if (!err.name || err.name.toString() !== 'MongoError') return this.sendError(res, err.code || 500, err.message || 'Unknown error.');
     else return this.sendError(res, 500, err);
-  },
-
-  /**
-   *
-   * @param res
-   * @param data
-   * @param message
-   */
-  sendData (res, data, message) {
-    log.info(message, data);
-    if (data) res.json(data);
-    res.end();
-  },
-
-  /**
-   *
-   * @param res
-   * @param message
-   */
-  sendMessage (res, message) {
-    log.info(message);
-    res.json({message: message.toString()});
-    res.end();
   },
 
   /**
