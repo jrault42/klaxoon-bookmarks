@@ -8,7 +8,7 @@ function AddFrom (props) {
    * Display error
    * @param evt
    */
-  const handleClick = evt => {
+  const handleClickValidate = evt => {
     evt.preventDefault();
     evt.stopPropagation();
     const encodedUrl = encodeURIComponent(document.getElementById('urlinput').value);
@@ -38,6 +38,12 @@ function AddFrom (props) {
       });
   };
 
+  const handleClickBack = evt => {
+    evt.preventDefault();
+    evt.stopPropagation();
+    props.backToList(true);
+  };
+
   /**
    * Display error
    * @param err
@@ -50,7 +56,7 @@ function AddFrom (props) {
 
   return (
     <>
-      <span className='material-icons btn' onClick={props.backToList}>arrow_back</span>
+      <span className='material-icons btn' onClick={handleClickBack}>arrow_back</span>
       <h2 className='m-2'>Créer un bookmark</h2>
       <form className='d-flex justify-content-center flex-column'>
         <div className='form-group row justify-content-center'>
@@ -62,7 +68,7 @@ function AddFrom (props) {
           <input id='urlinput' type='text' />
         </div>
         <div className='d-flex form-group justify-content-center'>
-          <button className='btn btn-success' onClick={handleClick}>Valider</button>
+          <button className='btn btn-success' onClick={handleClickValidate}>Valider</button>
         </div>
       </form>
       <p id='errorP' className='d-none text-danger'>Erreur !</p>

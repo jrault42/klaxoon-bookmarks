@@ -8,10 +8,7 @@ function Overview (props) {
     content = (<img alt='visuel' src={url} width={width} height={height} />);
   } else if (type === 'video') {
     content =
-      (<>
-        <p className='m-2'>Durée : {props.bookmark.duration}</p>
-        <iframe src={url} width={width} height={height} frameBorder='0' title={title} />
-      </>);
+      (<><p className='m-2'>Durée : {props.bookmark.duration}</p><iframe src={url} width={width} height={height} frameBorder='0' title={title} /></>);
   }
   return (
     <div>

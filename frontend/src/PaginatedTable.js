@@ -1,9 +1,9 @@
+/* global fetch */
 import React from 'react';
 import { TablePagination } from 'react-pagination-table';
-import config from "./config";
+import config from './config';
 
 function PaginatedTable (props) {
-
   /**
    *
    * @param evt
@@ -46,22 +46,23 @@ function PaginatedTable (props) {
             throw new Error('Une erreur est survenue lors de la suppression.');
           }
         }).catch(err => {
-        console.error(err);
-        props.displayError(err.message);
-      });
+          console.error(err);
+          props.displayError(err.message);
+        });
     }
   };
 
   const bookmarks = props.bookmarks.map(bookmark => {
-    bookmark.actions = (<div id={bookmark._id}>
-      <span onClick={handleClickOverview} className='material-icons btn'>visibility</span>
-      <span onClick={handleClickUpdate} className='material-icons btn'>create</span>
-      <span onClick={handleClickDelete} className='material-icons btn'>delete</span>
-    </div>);
-    return bookmark
+    bookmark.actions = (
+      <div id={bookmark._id}>
+        <span onClick={handleClickOverview} className='material-icons btn'>visibility</span>
+        <span onClick={handleClickUpdate} className='material-icons btn'>create</span>
+        <span onClick={handleClickDelete} className='material-icons btn'>delete</span>
+      </div>);
+    return bookmark;
   });
 
-  const headers =  [
+  const headers = [
     'URL',
     'Titre',
     'Auteur',
@@ -72,18 +73,19 @@ function PaginatedTable (props) {
 
   return (
     <div>
-    <TablePagination
-      title="Bookmarks"
-      subTitle=""
-      headers={ headers }
-      data={ bookmarks }
-      columns="url.title.author.createDate.keyWords.actions"
-      perPageItemCount={ 5 }
-      prePageText='<'
-      nextPageText='>'
-      totalCount={ props.nbTotal }
-      arrayOption={ [["keyWords", 'all', ', ']] }
-    /></div>
+      <TablePagination
+        title='Bookmarks'
+        subTitle=''
+        headers={headers}
+        data={bookmarks}
+        columns='url.title.author.createDate.keyWords.actions'
+        perPageItemCount={5}
+        prePageText='<'
+        nextPageText='>'
+        totalCount={props.nbTotal}
+        arrayOption={[['keyWords', 'all', ', ']]}
+      />
+    </div>
   );
 }
 
