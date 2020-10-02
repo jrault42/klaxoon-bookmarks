@@ -1,0 +1,9 @@
+.App {
+  text-align: center;
+}
+
+.pagination-status__item {
+  display: inline;
+  text-align: center;
+  padding: 2px ;
+}

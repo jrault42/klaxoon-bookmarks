@@ -1,0 +1,190 @@
+swagger: "2.0"
+info:
+  version: 1.0.0
+  title: klaxoon-bookmarks
+  description: A REST API to manage bookmarks
+
+consumes:
+- application/json
+produces:
+- application/json
+
+definitions:
+  Bookmark:
+    type: object
+
+    required:
+      - url
+      - title
+      - author
+      - createDate
+    properties:
+      url:
+        type: string
+      title:
+        type: string
+      author:
+        type: string
+      createDate:
+        type: string
+      width:
+        type: string
+      height:
+        type: string
+      duration:
+        type: integer
+
+  Bookmarks:
+    type: object
+    required:
+      - bookmarks
+      - nbTotal
+    properties:
+      bookmarks:
+        type: array
+        items:
+          $ref: "#/definitions/Bookmark"
+      nbTotal:
+        type: integer
+
+  keyWords:
+    type: array
+    items:
+      type: string
+
+  bookmarkUrl:
+    type: object
+    required:
+      - bookmarkUrl
+    properties:
+      bookmarkUrl:
+        type: string
+
+  Error:
+    required:
+      - code
+      - message
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
+
+paths:
+  /bookmarks:
+    x-swagger-router-controller: controller
+    get:
+      description: get all bookmarks
+      operationId: getBookmarks
+      parameters:
+        - name: offset
+          in: query
+          type: integer
+          required: false
+          default: 0
+          minimum: 0
+          description: The number of items to skip before starting to collect the result set.
+
+        - name: limit
+          in: query
+          type: integer
+          required: false
+          default: 0
+          minimum: 0
+          maximum: 100
+          description: The numbers of items to return.
+      responses:
+        200:
+          description: An array of bookmarks
+          schema:
+            $ref: "#/definitions/Bookmarks"
+        default:
+          description: unexpected error
+          schema:
+            $ref: "#/definitions/Error"
+
+    post:
+      description: Create a bookmark
+      operationId: createBookmark
+      parameters:
+        - name: body
+          in: body
+          schema:
+            $ref: "#/definitions/bookmarkUrl"
+        - name: mongoid
+          in: query
+          type: string
+          required: false
+      responses:
+        201:
+          description: Null response
+        default:
+          description: unexpected error
+          schema:
+            $ref: "#/definitions/Error"
+
+  /bookmarks/{id}:
+    x-swagger-router-controller: controller
+
+    parameters:
+    - name: id
+      in: path
+      required: true
+      description: The id of the bookmark
+      type: string
+
+    get:
+      description: get given bookmark
+      operationId: getBookmark
+      responses:
+        200:
+          description: returns created bookmark
+          schema:
+            $ref: "#/definitions/Bookmark"
+        default:
+          description: unexpected error
+          schema:
+            $ref: "#/definitions/Error"
+
+    put:
+      description: update given bookmark
+      operationId: updateBookmark
+      parameters:
+        - name: overwrite
+          in: query
+          type: boolean
+          required: false
+
+        - name: body
+          in: body
+          schema:
+            $ref: "#/definitions/keyWords"
+
+      responses:
+        200:
+          description: empty 200 response
+        default:
+          description: unexpected error
+          schema:
+            $ref: "#/definitions/Error"
+  
+    delete:
+      description: delete given bookmark
+      operationId: deleteBookmark
+      responses:
+        204:
+          description: No content response
+        default:
+          description: unexpected error
+          schema:
+            $ref: "#/definitions/Error"
+  /:
+    x-swagger-router-controller: controller
+    get:
+      operationId: home
+      responses:
+        default:
+          description: Returns hello
+          schema:
+            type: string

@@ -1,8 +1,29 @@
-# klaxoon-bookmarks
 
-## Application de gestion de bookmark pour ajouter des liens Vimeo et Flickr
+# klaxoon-bookmarks 
 
-### Les exigences : 
+Application de gestion de bookmark pour ajouter des liens Vimeo et Flickr.
+
+## Fonctionnement
+ Pour récupérer klaxoon-bookmarks vous avez besoin de [git](https://git-scm.com/downloads).
+ Pour faire fonctionner klaxoon-bookmarks vous avez besoin de [node/npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) (version la plus récente).
+ Si vous n'avez pas mongodb sur votre machine, vous avez également besoin de [docker](https://docs.docker.com/get-docker/) et [docker-compose](https://docs.docker.com/compose/install/).
+
+### Installation
+Une fois que vous avez installé, si besoin, git, npm, docker et docker-compose, vous pouvez récupérer le projet et le lancer :
+- Dans un terminal, taper les commandes suivantes :
+`git clone https://github.com/jrault42/klaxoon-bookmarks.git`
+`cd klaxoon-bookmarks`
+
+- Si vous n'avez pas mongodb sur votre machine, tapez également cette commande afin de lancer le docker mongo :
+`docker-compose up -d`
+
+- Ouvrir deux onglets de terminal pour pouvoir faire ces deux commandes en parallèle :
+`cd backend && npm i && npm start`
+`cd frontend && npm i && npm start`
+
+- Une fois le "npm start" lancé sur les deux onglets, aller sur **http://localhost:3000** dans votre navigateur.
+
+## Les exigences
 
     Frontend en React
     Backend en NodeJS 
